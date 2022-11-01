@@ -18,7 +18,7 @@ class User:
     @classmethod
     def add_user(self, data:dict):
         query = 'INSERT INTO users (first_name, last_name, email, password) VALUES (%(first_name)s, %(last_name)s, %(email)s,%(password)s);'
-        id = connectToMySQL('users').query_db(query, data)
+        id = connectToMySQL('wall').query_db(query, data)
         return id
 
     @classmethod
@@ -56,10 +56,17 @@ class User:
     @staticmethod
     def get_all_emails():
         query = 'SELECT email FROM users'
-        emails = connectToMySQL('users').query_db(query)
+        emails = connectToMySQL('wall').query_db(query)
         return emails
 
     @staticmethod
     def login(data:dict):
         query = 'SELECT id, password FROM users WHERE email = %(email)s'
-        return connectToMySQL('users').query_db(query, data)
+        return connectToMySQL('wall').query_db(query, data)
+
+    @classmethod
+    def get_user_from_id(cls, id):
+        query = 'SELECT * FROM users WHERE id = %(id)s'
+        data = {'id': id}
+        result = connectToMySQL('wall').query_db(query, data)
+        return cls(result[0])

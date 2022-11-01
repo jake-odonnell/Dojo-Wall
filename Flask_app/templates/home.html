@@ -11,7 +11,7 @@
     <div class="container">
         <div class="m-1 navbar border-bottom border-dark">
             <a href="/wall" class="text-dark">Coding Dojo Wall</a>
-            <p class="m-1">Welcome {{user.id}}!</p>
+            <p class="m-1">Welcome {{user.first_name}}!</p>
             <form action="/logout" class="text-center">
                 <button type="submit" class="btn btn-primary m-1">Logout</button>
             </form>
@@ -37,6 +37,7 @@
         <div class="posts">
             <h1 class="text-primary m-3">All Community posts</h1>
             <div class="p-2">
+                {% if posts %}
                 {% for post in posts %}
                     <div class="m-3">
                         <h3 class="text-dark">{{post.creater.first_name}} - {{post.created_at}}</h3>
@@ -46,7 +47,8 @@
                         {% endif %}
                         <!-- add comments -->
                     </div>
-                {% end for %}
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

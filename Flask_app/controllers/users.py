@@ -31,7 +31,7 @@ def f_register():
             'password': bcrypt.generate_password_hash(request.form['password'])
         }
         session['user_id'] = User.add_user(data)
-        return redirect('/home')
+        return redirect('/wall')
     else:
         session['is_reg'] = True
         session['first_name'] = request.form['first_name']
@@ -65,4 +65,5 @@ def r_home():
         return redirect('/login')
     else:
         id = session['user_id']
-        return render_template('home.html', id = id)
+        user = User.get_user_from_id(id)
+        return render_template('home.html', user = user)
