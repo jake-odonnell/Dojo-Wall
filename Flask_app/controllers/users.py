@@ -1,6 +1,7 @@
 from Flask_app import app
 from flask import render_template, redirect, session, request, flash
 from Flask_app.models.user import User
+from Flask_app.models.post import Post
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
@@ -66,4 +67,5 @@ def r_home():
     else:
         id = session['user_id']
         user = User.get_user_from_id(id)
-        return render_template('home.html', user = user)
+        posts = Post.get_all_posts()
+        return render_template('home.html', user = user, posts = posts)

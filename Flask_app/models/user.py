@@ -26,31 +26,31 @@ class User:
         is_val = True
         if len(data['first_name']) < 2 or str.isalpha(data['first_name']) == False:
             is_val = False
-            flash('Must have valid first name')
+            flash('* Must have valid first name')
         if len(data['last_name']) < 2 or str.isalpha(data['last_name']) == False:
             is_val = False
-            flash('Must have valid last name')
+            flash('* Must have valid last name')
         if not EMAIL_REGEX.match(data['email']):
             is_val = False
-            flash('Must have valid email')
+            flash('* Must have valid email')
         emails = cls.get_all_emails()
         for email in emails:
             if email['email'] == data['email']:
                 is_val = False
-                flash('Must have unique email')
+                flash('*Must have unique email')
         if len(data['password']) < 8:
             is_val = False
-            flash('Must have valid password')
+            flash('* Must have valid password')
         if not str.isalnum(data['password']):
             is_val = False
-            flash('Must have 1 letter and 1 number')
+            flash('* Must have 1 letter and 1 number')
         else:
             if str.isalpha(data['password']) or str.isnumeric(data['password']):
                 is_val = False
-                flash('Must have 1 letter and 1 number')
+                flash('* Must have 1 letter and 1 number')
         if data['password'] != data['conf_password']:
             is_val = False
-            flash('Passwords must match')
+            flash('* Passwords must match')
         return is_val
 
     @staticmethod
