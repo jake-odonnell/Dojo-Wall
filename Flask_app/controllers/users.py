@@ -19,7 +19,6 @@ def r_login():
             'last_name': '',
             'email': ''
         }
-        print(data)
     return render_template('login.html', info = data)
 
 @app.route('/register', methods = ['POST'])
@@ -49,7 +48,7 @@ def f_login():
     user = User.login(request.form)
     if bcrypt.check_password_hash(user[0]['password'], request.form['password']):
         session['user_id'] = user[0]['id']
-        return redirect('/home')
+        return redirect('/wall')
     else:
         session['is_reg'] = False
         flash('Invalid username/ password')
@@ -66,6 +65,8 @@ def r_home():
         return redirect('/login')
     else:
         id = session['user_id']
+        print(id)
         user = User.get_user_from_id(id)
+        print(user.id)
         posts = Post.get_all_posts()
         return render_template('home.html', user = user, posts = posts)

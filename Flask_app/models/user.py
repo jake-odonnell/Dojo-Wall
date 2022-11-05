@@ -1,5 +1,7 @@
 from Flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash
+from .post import Post
+from .comment import Comment
 import re
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
@@ -66,7 +68,35 @@ class User:
 
     @classmethod
     def get_user_from_id(cls, id):
-        query = 'SELECT * FROM users WHERE id = %(id)s'
+        query = 'SELECT * FROM users WHERE id = %(id)s;'
         data = {'id': id}
         result = connectToMySQL('wall').query_db(query, data)
-        return cls(result[0])
+        user = cls(result[0])
+        query = 'SELECT * FROM posts LEFT JOIN users ON posts.user_id = users.id WHERE users.id = %(id)s'
+        data = {'id': id}
+        result = connectToMySQL('wall').query_db(query, data)
+        for post in result:
+            data = {
+                'id': post['id'],
+                'content': post['content'], 
+                'created_at': post['created_at'],
+                'updated_at': post['updated_at'],
+                'user_id': post['user_id'],
+                'first_name': post['first_name']
+            }
+            user.posts.append(Post(data))
+        query = 'SELECT * FROM comments LEFT JOIN users on users.id = comments.user_id WHERE users.id = %(id)s;'
+        data = {'id': id}
+        comments = connectToMySQL('wall').query_db(query, data)
+        for comment in comments:
+            data = {
+                'id': comment['id'],
+                'content': comment['content'],
+                'created_at': comment['created_at'],
+                'updated_at': comment['updated_at'],
+                'user_id': comment['user_id'],
+                'user_first_name': comment['first_name'],
+                'post_id': comment['post_id']
+            }
+            user.comments.append(Comment(data))
+        return user

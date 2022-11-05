@@ -43,12 +43,32 @@
                 {% if posts %}
                 {% for post in posts %}
                     <div class="m-3 border border-dark shadow rounded p-2">
-                        <h3 class="text-dark border-bottom">{{post.creator.first_name}} - {{post.created_at.strftime('%m-%d-%y')}}</h3>
-                        <p class="m-2">{{post.content}}</p>
-                        {% if post.creator.id == user.id %}
-                            <!-- Add update/delete button -->
+                        <h3 class="text-dark border-bottom">{{post.user_name}} - {{post.created_at.strftime('%m-%d-%y')}}</h3>
+                        <p class="m-2 border-bottom">{{post.content}}</p>
+                        {% if post.user_id == user.id %}
+                            <form action="/delete-post" class="" method="post">
+                                <input type="hidden" name="id" value="{{post.id}}">
+                                <button type="submit" class="btn btn-danger m-2">Delete</button>
+                            </form>
                         {% endif %}
-                        <!-- add comments -->
+                        {% for comment in post.comments %}
+                            <div class="p-3">
+                                <h4 class="">{{comment.user_name}} - {{comment.created_at.strftime('%m-%d-%y')}}</h3>
+                                    <p class="border-bottom">{{comment.content}}</p>
+                            </div>
+                            {% if comment.user_id == user.id %}
+                                <form action="/delete-comment" class="" method="post">
+                                    <input type="hidden" name="id" value="{{comment.id}}">
+                                    <button type="submit" class="btn btn-danger m-2">Delete</button>
+                                </form>
+                            {% endif %}
+                        {% endfor %}
+                        <form action="/add-comment" class="inline p-2" method="post">
+                            <input type="hidden" name="post_id" value="{{post.id}}">
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                            <input type="text" class = "col-11" name="content">
+                            <button type="submit" class="btn btn-primary mt-2">Comment</button>
+                        </form>
                     </div>
                 {% endfor %}
                 {% endif %}
